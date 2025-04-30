@@ -1,0 +1,37 @@
+.emptyState {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .content {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .icon {
+    font-size: 48px;
+    color: #aaa;
+    margin-bottom: 20px;
+  }
+  
+  .emptyState h4 {
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  
+  .emptyState p {
+    color: #888;
+    margin-bottom: 24px;
+  }
+  
+  .emptyState button {
+    background-color: #4695f0;
+    border-color: #4695f0;
+  }
+  
+  .emptyState button:hover {
+    background-color: #3a85d8;
+    border-color: #3a85d8;
+  }

@@ -1,0 +1,1308 @@
+React and JavaScript Technical Exam Answers
+==========================================
+
+Question 2: Answer The Following
+================================
+
+1. What is Reconciliation in React?
+-----------------------------------
+Reconciliation is React's algorithm for diffing virtual DOM trees to determine which parts of the UI need to be updated. When state or props change, React creates a new virtual DOM tree and compares it with the previous one. Rather than re-rendering the entire UI, React identifies the minimal set of changes needed to update the actual DOM, which significantly improves performance. This process involves comparing element types, keys, and properties to efficiently update only what has changed.
+
+2. How does React handle prop drilling, and what are the downsides of excessive prop drilling?
+---------------------------------------------------------------------------------------------
+Prop drilling is the practice of passing props through multiple component layers to reach a deeply nested component that needs the data. React handles this through a unidirectional data flow where props are passed from parent to child components.
+
+Downsides of excessive prop drilling:
+- Reduced code maintainability
+- Increased complexity as the component tree grows
+- Difficulty tracking data flow and debugging
+- Tightly coupled components that are harder to refactor
+- Performance overhead from unnecessary re-renders of intermediate components
+- Verbose code that obscures the application's logic
+
+Alternatives include Context API, Redux, or React Query to avoid prop drilling issues.
+
+3. What is the difference between stateful and stateless components?
+-------------------------------------------------------------------
+Stateful Components:
+- Maintain and manage internal state data
+- Can use React hooks like useState or be class components with this.state
+- Handle data logic and user interactions
+- Re-render when state or props change
+- Generally more complex and harder to test
+
+Stateless Components (Functional Components):
+- Don't manage internal state (unless using hooks)
+- Receive data exclusively through props
+- Focused on presentation rather than logic
+- More predictable and easier to test
+- More reusable across the application
+- Often implemented as pure functions
+
+4. Does Arrow functions have their own `this`?
+---------------------------------------------
+No, arrow functions do not have their own `this` binding. Instead, they inherit `this` from the enclosing lexical context (the surrounding code). This behavior makes arrow functions particularly useful in React class components for event handlers and callbacks, as they don't require explicit binding to preserve the component's context.
+
+5. Does `map()` method mutate the original array?
+------------------------------------------------
+No, the `map()` method does not mutate the original array. It creates and returns a new array with the results of calling a provided function on every element in the calling array. The original array remains unchanged.
+
+6. What is the difference between `map()` and `forEach()` methods?
+-----------------------------------------------------------------
+map():
+- Returns a new array with transformed elements
+- Does not modify the original array
+- Each callback's return value becomes an element in the new array
+- Chainable with other array methods
+- Commonly used for data transformation
+
+forEach():
+- Returns `undefined`
+- Executes a callback for each element but doesn't create a new array
+- Used for side effects (like logging or DOM manipulation)
+- Not chainable
+- Cannot be stopped (except by throwing an exception)
+
+7. What is a JavaScript promise?
+-------------------------------
+A Promise is an object representing the eventual completion or failure of an asynchronous operation. It serves as a placeholder for a value that may not be available yet. A Promise exists in one of three states:
+- Pending: Initial state, neither fulfilled nor rejected
+- Fulfilled: Operation completed successfully, and the promise has a resulting value
+- Rejected: Operation failed, and the promise has a reason for the failure
+
+Promises provide .then() and .catch() methods to handle successful results and errors respectively, as well as .finally() for cleanup operations. They help manage asynchronous code more cleanly than callbacks and avoid "callback hell."
+
+8. How to make an Object immutable in JavaScript?
+-----------------------------------------------
+There are several ways to make an object immutable in JavaScript:
+
+1. Object.freeze():
+   const obj = { name: "John" };
+   Object.freeze(obj);
+   // Now obj cannot be modified (shallow immutability)
+
+2. Object.preventExtensions():
+   const obj = { name: "John" };
+   Object.preventExtensions(obj);
+   // Cannot add new properties, but can modify existing ones
+
+3. Object.seal():
+   const obj = { name: "John" };
+   Object.seal(obj);
+   // Cannot add or delete properties, but can modify existing ones
+
+4. Deep freezing (for nested objects):
+   function deepFreeze(obj) {
+     Object.keys(obj).forEach(prop => {
+       if (typeof obj[prop] === 'object' && obj[prop] !== null) 
+         deepFreeze(obj[prop]);
+     });
+     return Object.freeze(obj);
+   }
+
+5. Immutable.js or Immer libraries for more complex cases
+
+Note: Object.freeze() only provides shallow immutability. For deeply nested objects, you need a recursive approach or a dedicated library.
+
+9. How to parse JSON in JavaScript?
+----------------------------------
+JSON can be parsed in JavaScript using the built-in JSON.parse() method:
+
+try {
+  // Convert JSON string to JavaScript object
+  const jsonString = '{"name": "John", "age": 30, "city": "New York"}';
+  const data = JSON.parse(jsonString);
+  
+  console.log(data.name); // "John"
+  console.log(data.age);  // 30
+} catch (error) {
+  console.error("Invalid JSON format:", error);
+}
+
+For converting JavaScript objects to JSON strings, use JSON.stringify():
+
+const person = { name: "John", age: 30 };
+const jsonString = JSON.stringify(person);
+console.log(jsonString); // '{"name":"John","age":30}'
+
+10. How to handle error in async/await and promises?
+--------------------------------------------------
+For Promises:
+fetchData()
+  .then(data => {
+    // Handle success
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle error
+    console.error("Error fetching data:", error);
+  })
+  .finally(() => {
+    // Always executed
+    console.log("Operation completed");
+  });
+
+For async/await:
+async function getData() {
+  try {
+    const data = await fetchData();
+    // Handle success
+    console.log(data);
+  } catch (error) {
+    // Handle error
+    console.error("Error fetching data:", error);
+  } finally {
+    // Always executed
+    console.log("Operation completed");
+  }
+}
+
+Global Promise Error Handling:
+window.addEventListener('unhandledrejection', event => {
+  console.error('Unhandled promise rejection:', event.reason);
+});
+
+11. What are environment variables, and how are they used?
+---------------------------------------------------------
+Environment variables are key-value pairs that exist outside of your application code and are part of the environment in which your application runs. They're used to:
+- Store configuration settings separate from code
+- Manage sensitive information (API keys, secrets) without hard-coding
+- Configure different behavior across environments (development, staging, production)
+- Store deployment-specific settings
+
+In React applications (using Create React App), environment variables are accessed using the process.env object with a REACT_APP_ prefix:
+
+// .env file
+REACT_APP_API_URL=https://api.example.com
+REACT_APP_API_KEY=your_api_key
+
+// Usage in React
+const apiUrl = process.env.REACT_APP_API_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
+
+For Node.js applications, you can use the dotenv package to load variables from a .env file into process.env.
+
+12. Explain the concept of responsive design. How would you implement it?
+-----------------------------------------------------------------------
+Responsive design is an approach to web design that makes web pages render well on various devices and window/screen sizes. It ensures optimal viewing experience with easy reading and navigation, requiring minimal resizing and scrolling.
+
+Implementation approaches:
+
+1. Fluid Grids:
+   Use relative units like percentages, em, rem instead of fixed pixel values
+
+2. Flexible Images:
+   img {
+     max-width: 100%;
+     height: auto;
+   }
+
+3. Media Queries:
+   /* Mobile first approach */
+   body {
+     font-size: 16px;
+   }
+   
+   /* For tablets */
+   @media (min-width: 768px) {
+     body {
+       font-size: 18px;
+     }
+   }
+   
+   /* For desktops */
+   @media (min-width: 1024px) {
+     body {
+       font-size: 20px;
+     }
+   }
+
+4. CSS Frameworks: Bootstrap, Tailwind CSS, or Material UI for built-in responsive components
+
+5. Viewport Meta Tag:
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+6. CSS Grid and Flexbox:
+   .container {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+     gap: 20px;
+   }
+
+7. Responsive Typography:
+   html {
+     font-size: calc(16px + 0.5vw);
+   }
+
+8. Testing across devices using tools like Chrome DevTools device emulation
+
+13. How do you check if a key exists in an object (3 ways)
+---------------------------------------------------------
+Method 1: Using `in` operator
+const person = { name: "John", age: 30 };
+console.log("name" in person); // true
+console.log("gender" in person); // false
+
+Method 2: Using hasOwnProperty() method
+const person = { name: "John", age: 30 };
+console.log(person.hasOwnProperty("name")); // true
+console.log(person.hasOwnProperty("gender")); // false
+
+Method 3: Using undefined check
+const person = { name: "John", age: 30 };
+console.log(person.name !== undefined); // true
+console.log(person.gender !== undefined); // false
+
+Each approach has specific use cases:
+- `in` checks the entire prototype chain
+- `hasOwnProperty()` only checks direct properties
+- Direct property access with undefined comparison may give false negatives if a property exists with value `undefined`
+
+14. Explain Memoization in Javascript and React With Examples
+-----------------------------------------------------------
+Memoization is an optimization technique that stores the results of expensive function calls and returns the cached result when the same inputs occur again, reducing computation time.
+
+In JavaScript:
+// Basic memoization implementation
+function memoize(fn) {
+  const cache = {};
+  
+  return function(...args) {
+    const key = JSON.stringify(args);
+    
+    if (cache[key] === undefined) {
+      cache[key] = fn(...args);
+    }
+    
+    return cache[key];
+  };
+}
+
+// Example: Expensive calculation
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+// Memoized version
+const memoizedFibonacci = memoize(function(n) {
+  if (n <= 1) return n;
+  return memoizedFibonacci(n - 1) + memoizedFibonacci(n - 2);
+});
+
+console.log(memoizedFibonacci(40)); // Much faster than regular fibonacci(40)
+
+In React:
+
+1. React.memo - Component level memoization:
+const MyComponent = React.memo(function MyComponent(props) {
+  // Only re-renders if props change
+  return <div>{props.name}</div>;
+});
+
+2. useMemo Hook - Value memoization:
+function ProductList({ products, filterTerm }) {
+  // filteredProducts only recalculated when dependencies change
+  const filteredProducts = React.useMemo(() => {
+    console.log("Filtering products...");
+    return products.filter(product => 
+      product.name.includes(filterTerm)
+    );
+  }, [products, filterTerm]);
+  
+  return (
+    <ul>
+      {filteredProducts.map(product => (
+        <li key={product.id}>{product.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+3. useCallback Hook - Function memoization:
+function ParentComponent() {
+  const [count, setCount] = useState(0);
+  
+  // handleClick only recreated if count changes
+  const handleClick = React.useCallback(() => {
+    console.log(`Button clicked, count: ${count}`);
+  }, [count]);
+  
+  return <ChildComponent onClick={handleClick} />;
+}
+
+// Using React.memo prevents unnecessary re-renders
+const ChildComponent = React.memo(function ChildComponent({ onClick }) {
+  console.log("ChildComponent rendered");
+  return <button onClick={onClick}>Click me</button>;
+});
+
+Memoization benefits:
+- Improved performance for expensive calculations
+- Reduced re-renders in React components
+- Better handling of referential equality in dependencies
+
+
+Question 3: What is The Output?
+================================
+
+Question 1:
+----------
+let animals = ["eagle", "osprey", "salmon"];
+let key = animal => animal === "salmon";
+if(animals.some(key)){
+  console.log("swim");
+}
+
+Output: 
+swim
+
+Explanation:
+The some() method tests whether at least one element in the array passes the test implemented by the provided function. Here, the key function checks if an element equals "salmon". Since "salmon" exists in the array, animals.some(key) returns true, and "swim" is logged to the console.
+
+Question 2 (First snippet):
+---------------------------
+let animals = [{ type: 'lion' }, 'tiger'];
+let clones = animals.slice();
+clones[0].type = 'bear';
+clones[1] = 'sheep';
+console.log(animals[0].type, clones[0].type);
+console.log(animals[1], clones[1]);
+
+Output:
+bear bear
+tiger sheep
+
+Explanation:
+- slice() creates a shallow copy - new array with references to the same objects
+- Changing clones[0].type affects the original object since both arrays reference the same object
+- Assigning clones[1] = 'sheep' replaces the reference in clones but doesn't affect animals
+
+Question 2 (Second snippet):
+----------------------------
+let bear = {
+  sound: 'roar',
+  roar() {
+    console.log(this.sound);
+  },
+};
+bear.sound = 'grunt';
+let bearSound = bear.roar;
+bearSound();
+
+Output: 
+undefined
+
+Explanation:
+- The bearSound variable holds a reference to the roar method, but it's detached from the bear object
+- When called directly as bearSound(), this refers to the global object (or undefined in strict mode)
+- The global object doesn't have a sound property, so undefined is logged
+
+Question 3 (First snippet):
+---------------------------
+function logThis() {
+  console.log(this);
+}
+logThis();
+
+Output: 
+[object Window] (in browser) or global object (in Node.js)
+
+Explanation:
+When a function is called in the global context without any specific binding, this refers to the global object (Window in browsers or global in Node.js).
+
+Question 3 (Second snippet):
+----------------------------
+class RainForest {
+  static minimumRainFall = 60;
+}
+let congo = new RainForest();
+RainForest.minimumRainFall = 80;
+console.log(congo.minimumRainFall);
+
+Output: 
+undefined
+
+Explanation:
+- minimumRainFall is a static property of the RainForest class
+- Static properties belong to the class itself, not to instances
+- congo is an instance of RainForest but doesn't have its own minimumRainFall property
+- Accessing congo.minimumRainFall returns undefined
+
+Question 4 (First snippet):
+---------------------------
+function fetchData() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Data fetched!");
+    }, 1000);
+  });
+}
+async function displayData() {
+  const data = await fetchData();
+  console.log(data);
+}
+displayData();
+console.log("After displayData call");
+
+Output:
+After displayData call
+Data fetched!
+
+Explanation:
+- displayData() is asynchronous but doesn't block execution
+- "After displayData call" gets logged immediately
+- After one second, the promise resolves and "Data fetched!" is logged
+
+Question 4 (Second snippet):
+----------------------------
+function Greet({ name }) {
+  return <h1>Hello, {name ?? 'Guest'}!</h1>;
+}
+ReactDOM.render(<Greet name={null} />, document.getElementById('root'));
+ReactDOM.render(<Greet />, document.getElementById('root'));
+
+Output:
+Both render <h1>Hello, Guest!</h1> to the DOM
+
+Explanation:
+- First render: name is explicitly null, so the nullish coalescing operator ?? returns 'Guest'
+- Second render: name is undefined (not provided), so ?? also returns 'Guest'
+- The second render replaces the first one in the DOM
+
+Question 5:
+----------
+var names = ['Lea', 'John', 'Rachel', 'Yehuda'];
+(function(){
+  for(val in names){
+    console.log(val);
+  }
+})();
+
+Output:
+0
+1
+2
+3
+
+Explanation:
+The for...in loop iterates over the enumerable properties of an object. When used with an array, it iterates over the indices (not the values). Therefore, it logs the indices 0, 1, 2, and 3 rather than the actual names.
+
+
+OOP Questions - Exam Answers
+===========================
+
+Question 4: OOP Questions
+
+1. What is the difference between a public and private constructor?
+---------------------------------------------------------------
+Public Constructor:
+- Accessible from anywhere in the program, including outside the class
+- Allows objects to be created directly using the new keyword from any class
+- Used in most standard classes that should be instantiated freely
+- Example: public MyClass() { }
+
+Private Constructor:
+- Accessible only from within the class itself
+- Prevents direct instantiation of the class from external classes
+- Common uses:
+  * Implementing the Singleton pattern
+  * Factory pattern implementations
+  * Utility classes that contain only static methods
+  * Preventing inheritance (subclasses would need access to call super constructor)
+- Example: private MyClass() { }
+
+2. What is the difference between encapsulation and data abstraction?
+------------------------------------------------------------------
+Encapsulation:
+- The bundling of data and methods that operate on that data within a single unit (class)
+- Restricts direct access to some of an object's components
+- Implemented using access modifiers (private, protected, public)
+- Focuses on data hiding and protecting the integrity of an object's state
+- Example: Private fields with public getters/setters
+
+Data Abstraction:
+- The process of hiding complex implementation details while showing only essential features
+- Presents a simplified view of an object by exposing what it does rather than how it does it
+- Implemented using abstract classes and interfaces
+- Focuses on hiding complexity and providing a conceptual view
+- Example: Interface defining methods without implementation details
+
+Key Difference:
+Encapsulation is about wrapping data and methods together and controlling access, 
+while abstraction is about hiding complexity and showing only necessary functionality.
+
+3. What is the role of the final keyword in Java?
+----------------------------------------------
+In Java, the final keyword has multiple uses:
+
+Final Variables:
+- Creates constants that cannot be reassigned after initialization
+- Example: final double PI = 3.14159;
+
+Final Methods:
+- Prevents method overriding in subclasses
+- Ensures the method's behavior remains consistent throughout all derived classes
+- Example: public final void calculate() { }
+
+Final Classes:
+- Prevents inheritance, making the class impossible to subclass
+- Used when a class's implementation should not be altered
+- Example: public final class String { }
+
+Final Parameters:
+- Parameters that cannot be changed within the method
+- Example: public void process(final int value) { }
+
+Purpose:
+The final keyword generally enforces immutability and helps in writing more secure and optimized code.
+
+4. What is a singleton pattern, and when is it used?
+-------------------------------------------------
+Singleton Pattern:
+- A creational design pattern that ensures a class has only one instance throughout the application
+- Provides a global point of access to that instance
+- Typically implemented using a private constructor and a static method to retrieve the instance
+
+Implementation:
+public class Singleton {
+    private static Singleton instance;
+    
+    private Singleton() {
+        // Private constructor prevents instantiation
+    }
+    
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+
+When to use:
+- When exactly one instance of a class is needed (database connections, configuration managers)
+- When the object must be accessible globally
+- When you need to control concurrent access to shared resources
+- When you need lazy initialization of a resource-intensive object
+
+Common use cases:
+- Logger instances
+- Connection pools
+- Configuration managers
+- Device drivers
+- Caches
+
+5. Explain Static Type Polymorphism
+---------------------------------
+Static Type Polymorphism (Compile-time Polymorphism):
+- Resolved during compile time rather than runtime
+- Primarily achieved through method overloading and operator overloading (though Java doesn't support operator overloading)
+- Also known as early binding or compile-time binding
+
+Method Overloading:
+- Defining multiple methods with the same name but different parameters
+- Resolution is based on the method signature (number, type, order of parameters)
+- Example:
+  public int add(int a, int b) { return a + b; }
+  public double add(double a, double b) { return a + b; }
+  public int add(int a, int b, int c) { return a + b + c; }
+
+Characteristics:
+- Determined at compile time based on the reference type
+- More efficient than dynamic polymorphism as no runtime resolution is needed
+- Provides better type safety
+- Makes code more readable by using meaningful method names for similar operations
+
+Difference from Dynamic Polymorphism:
+Unlike dynamic polymorphism (runtime polymorphism) which relies on method overriding and is resolved based on the actual object type during runtime.
+
+6. Decide True Or False And Explain:
+----------------------------------
+
+a. Static Method can be overridden
+- False
+- Static methods belong to the class rather than instances
+- They can be hidden in subclasses but not overridden
+- When a subclass defines a static method with the same signature as a static method in the parent class, it hides the parent method rather than overriding it
+- Method overriding applies to instance methods and depends on the actual object type, whereas static methods are bound at compile time based on the reference type
+
+b. Abstraction is the process or method of gaining information, reduce complexity, promote maintainability, and also provide a clear separation between the interface and its concrete implementation and problems are solved at the implementation level.
+- True
+- Abstraction is indeed about hiding complex implementation details while exposing essential functionality
+- It reduces complexity by presenting a simplified view of an object
+- It promotes maintainability by allowing implementation changes without affecting the interface
+- It separates what an object does (interface) from how it does it (implementation)
+- Implementation details are encapsulated, allowing problem-solving at the implementation level without affecting users of the abstraction
+
+c. Interface: It contains only the declaration of methods, properties, events, or indexers and It can contain static members
+- True (with clarification for modern Java)
+- Traditional interfaces contain only method declarations (no implementation)
+- In modern Java (8+), interfaces can also contain:
+  * Default methods (with implementation)
+  * Static methods (with implementation)
+  * Private methods (since Java 9)
+  * Constants (public static final fields)
+- However, they still cannot contain instance variables
+- Interface members are implicitly public (except for private methods in Java 9+)
+- Static members in interfaces are accessible using the interface name
+
+
+
+
+
+Question 5: Problem Solving Solutions
+-------------------------------------
+
+1. HTTP GET Request Function (Using XMLHttpRequest):
+---------------------------------------------------
+function httpGet(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(xhr.responseText);
+      } else {
+        reject(new Error(`HTTP error! Status: ${xhr.status}`));
+      }
+    };
+    
+    xhr.onerror = function() {
+      reject(new Error('Network error occurred'));
+    };
+    
+    xhr.send();
+  });
+}
+
+Alternate Solution (Using fetch API):
+-------------------------------------
+function httpGetWithFetch(url) {
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    });
+}
+
+2. Compute the Exponent of a Number Using Recursion:
+-----------------------------------------------------
+function power(base, exponent) {
+  if (exponent === 0) return 1;
+  if (exponent === 1) return base;
+  if (exponent < 0) return 1 / power(base, -exponent);
+  if (exponent % 2 === 0) {
+    const halfPower = power(base, exponent / 2);
+    return halfPower * halfPower;
+  } else {
+    return base * power(base, exponent - 1);
+  }
+}
+
+3. Find Second Lowest and Second Greatest Numbers:
+--------------------------------------------------
+function findSecondLowestAndGreatest(arr) {
+  if (arr.length < 2) return "Array should have at least 2 elements";
+  const sortedArr = [...arr].sort((a, b) => a - b);
+  const uniqueArr = [...new Set(sortedArr)];
+  if (uniqueArr.length < 2) return "Array should have at least 2 different elements";
+  return [uniqueArr[1], uniqueArr[uniqueArr.length - 2]];
+}
+
+4. Determine Leap Year:
+------------------------
+function isLeapYear(year) {
+  if (year % 400 === 0) return true;
+  if (year % 100 === 0) return false;
+  return year % 4 === 0;
+}
+
+5. BankAccount Class:
+---------------------
+class BankAccount {
+  constructor(accountNumber, initialBalance = 0) {
+    this.accountNumber = accountNumber;
+    this.balance = initialBalance;
+  }
+  
+  deposit(amount) {
+    if (amount <= 0) throw new Error("Deposit amount must be positive");
+    this.balance += amount;
+    return this.balance;
+  }
+  
+  withdraw(amount) {
+    if (amount <= 0) throw new Error("Withdrawal amount must be positive");
+    if (amount > this.balance) throw new Error("Insufficient funds");
+    this.balance -= amount;
+    return this.balance;
+  }
+  
+  getBalance() {
+    return this.balance;
+  }
+  
+  getAccountInfo() {
+    return `Account Number: ${this.accountNumber}, Balance: $${this.balance}`;
+  }
+}
+
+Example Usage:
+--------------
+function bankAccountExample() {
+  const account1 = new BankAccount("123456789", 1000);
+  const account2 = new BankAccount("987654321");
+  account1.deposit(500);
+  account2.deposit(1000);
+  account1.withdraw(200);
+  console.log(account1.getAccountInfo());
+  console.log(account2.getAccountInfo());
+}
+
+6. Student Data Processing Using map, filter, and reduce:
+----------------------------------------------------------
+function processStudentData(students) {
+  const highScoringStudents = students
+    .filter(student => student.marks > 60)
+    .map(student => student.name);
+  
+  console.log("Students who scored more than 60:", highScoringStudents);
+  
+  const updatedStudents = students.map(student => {
+    if (student.marks < 60) return { ...student, marks: student.marks + 20 };
+    return student;
+  });
+  
+  const totalHighMarks = updatedStudents
+    .filter(student => student.marks > 60)
+    .reduce((total, student) => total + student.marks, 0);
+  
+  console.log("Total marks for students with marks > 60 (after adding 20 to low scorers):", totalHighMarks);
+  
+  return { highScoringStudents, totalHighMarks };
+}
+
+Sample Data:
+------------
+const student = [
+  {name:"Smith", rollNumber:31, marks:80},
+  {name:"Jenny", rollNumber:15, marks:69},
+  {name:"John", rollNumber:16, marks:35},
+  {name:"Tiger", rollNumber:7, marks:55}
+];
+
+7. Binary Search Function:
+--------------------------
+function binarySearch(arr, target) {
+  let left = 0;
+  let right = arr.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}
+
+8. Convert Singly Linked List to Array:
+---------------------------------------
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+    this.size = 0;
+  }
+  
+  append(data) {
+    const newNode = new Node(data);
+    if (!this.head) {
+      this.head = newNode;
+    } else {
+      let current = this.head;
+      while (current.next) {
+        current = current.next;
+      }
+      current.next = newNode;
+    }
+    this.size++;
+  }
+  
+  toArray() {
+    const result = [];
+    let current = this.head;
+    while (current) {
+      result.push(current.data);
+      current = current.next;
+    }
+    return result;
+  }
+}
+
+Example Usage:
+--------------
+function linkedListExample() {
+  const list = new LinkedList();
+  list.append(1);
+  list.append(2);
+  list.append(3);
+  list.append(4);
+  const array = list.toArray();
+  console.log("Linked List converted to array:", array);
+  return array;
+}
+
+
+Question 6 : Answer The Following  
+-------------------------------------
+
+## Question 1: What is the issue in the below code regarding useMemo hook:
+
+```javascript
+import React, { useMemo } from "react";
+function App() {
+  const numbers = [1, 2, 3, 4, 5];
+  const doubledNumbers = useMemo(() => numbers.map((n) => n * 2), []);
+  return (
+    <div>
+      {doubledNumbers.map((number) => (
+        <p key={number}>{number}</p>
+      ))}
+    </div>
+  );
+}
+export default App;
+```
+
+The issue in this code is that the dependency array for the useMemo hook is empty `[]`, while it should include the `numbers` array. 
+
+When using useMemo, the dependency array determines when the memoized value should be recalculated. With an empty dependency array, the calculation only runs once during the initial render. If the `numbers` array ever changes, those changes won't be reflected in `doubledNumbers`.
+
+The correct implementation should be:
+```javascript
+const doubledNumbers = useMemo(() => numbers.map((n) => n * 2), [numbers]);
+```
+
+This ensures that `doubledNumbers` is recalculated whenever the `numbers` array changes, maintaining the expected behavior while still providing the performance benefits of memoization.
+
+## Question 2: Can you explain with coding the difference between a pure and impure function, and why it matters in the context of React?
+
+### Pure vs Impure Functions
+
+A pure function:
+- Always returns the same output for the same input
+- Has no side effects (doesn't modify external state)
+- Doesn't depend on external state
+
+An impure function:
+- May return different outputs for the same input
+- May have side effects (modifies external state)
+- May depend on external state
+
+```javascript
+// Pure function example
+function addNumbers(a, b) {
+  return a + b;
+}
+
+// The same input will always produce the same output
+addNumbers(2, 3); // Always returns 5
+addNumbers(2, 3); // Always returns 5
+
+// Impure function example
+let total = 0;
+
+function addToTotal(value) {
+  total += value; // Side effect: modifies external state
+  return total;
+}
+
+// Same input produces different outputs
+addToTotal(5); // Returns 5
+addToTotal(5); // Returns 10
+```
+
+### In the context of React:
+
+```javascript
+// Pure Component
+function PureCounter({ count, onIncrement }) {
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={onIncrement}>Increment</button>
+    </div>
+  );
+}
+// For the same props, PureCounter always renders the same output
+
+// Impure Component
+function ImpureCounter() {
+  // Directly modifies external state
+  const handleClick = () => {
+    window.counterValue++; // Side effect - modifies global variable
+    document.title = `Count: ${window.counterValue}`; // Side effect - changes DOM
+  };
+
+  return (
+    <div>
+      <p>Count: {window.counterValue}</p>
+      <button onClick={handleClick}>Increment</button>
+    </div>
+  );
+}
+```
+
+### Why It Matters in React:
+
+1. **Predictability**: Pure components are predictable - same props always result in the same output.
+
+2. **Testing**: Pure components are easier to test - you just need to verify the output for given inputs.
+
+3. **Optimization**: React can optimize rendering for pure components since they're predictable. This enables performance optimizations like `React.memo` which can skip re-renders when props haven't changed.
+
+4. **Concurrency**: React's concurrent mode relies on pure functions to pause and resume rendering safely.
+
+5. **Debugging**: Pure components make debugging easier because the component behavior depends only on its props, not on external state that might change unpredictably.
+
+React's architecture is designed around the concept of pure functions, particularly in the rendering phase. The entire component tree is ideally rendered as a pure function of state and props, which enables many of React's core features and optimizations.
+
+## Question 3: How to implement a simple dropdown menu using the 'useRef' hook?
+
+```javascript
+import React, { useState, useRef, useEffect } from 'react';
+
+function DropdownMenu() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Select an option');
+  const dropdownRef = useRef(null);
+  
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    // Clean up event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
+  
+  return (
+    <div className="dropdown-container" ref={dropdownRef}>
+      <button 
+        className="dropdown-button"
+        onClick={toggleDropdown}
+      >
+        {selectedOption}
+      </button>
+      
+      {isOpen && (
+        <ul className="dropdown-menu">
+          {options.map((option, index) => (
+            <li 
+              key={index}
+              onClick={() => handleOptionSelect(option)}
+              className="dropdown-item"
+            >
+              {option}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export default DropdownMenu;
+```
+
+**Key aspects of this implementation:**
+
+1. **useRef Hook**: Creates a reference to the dropdown container DOM element.
+2. **Click Outside Detection**: The useEffect hook sets up an event listener to detect clicks outside the dropdown and close it.
+3. **Toggle Functionality**: The dropdown opens and closes when the button is clicked.
+4. **Option Selection**: Clicking an option updates the selected value and closes the dropdown.
+
+The useRef hook is crucial here because it allows us to:
+- Reference the dropdown DOM element directly
+- Check if a click occurred inside or outside that element
+- Avoid unnecessary re-renders when accessing the DOM element
+
+This implementation follows React best practices by:
+- Using hooks for state management and DOM interaction
+- Properly cleaning up event listeners in the useEffect return function
+- Using conditional rendering for the dropdown menu
+
+## Question 4: Class components have access to various lifecycle methods like componentDidMount, componentDidUpdate, and componentWillUnmount, which allow you to hook into different stages of a component's lifecycle. (Explain With Coding)
+
+```javascript
+import React, { Component } from 'react';
+
+class UserProfile extends Component {
+  constructor(props) {
+    super(props);
+    
+    // Initial state
+    this.state = {
+      user: null,
+      loading: true,
+      error: null,
+      count: 0
+    };
+    
+    console.log('1. Constructor: Initialize state and bind methods');
+  }
+  
+  // Called immediately after a component is mounted (inserted into the tree)
+  componentDidMount() {
+    console.log('3. ComponentDidMount: Component is now in the DOM');
+    
+    // Perfect place for data fetching, subscriptions, or DOM manipulations
+    this.fetchUserData();
+    
+    // Setting up timer as an example of subscription
+    this.timer = setInterval(() => {
+      this.setState(prevState => ({ count: prevState.count + 1 }));
+    }, 1000);
+  }
+  
+  // Called before rendering when new props or state are being received
+  // Return false to prevent a rendering
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('4. ShouldComponentUpdate: Decide if re-render is needed');
+    
+    // Only re-render if userId has changed or loading state changed
+    const shouldUpdate = 
+      this.props.userId !== nextProps.userId ||
+      this.state.loading !== nextState.loading ||
+      this.state.user !== nextState.user;
+      
+    return shouldUpdate;
+  }
+  
+  // Called immediately before rendering when new props or state are being received
+  // Can prepare for an update (not commonly used)
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('5. GetSnapshotBeforeUpdate: Get info from DOM before it changes');
+    
+    // For example, capture scroll position
+    if (prevProps.userId !== this.props.userId) {
+      const scrollPosition = this.listRef ? this.listRef.scrollTop : 0;
+      return scrollPosition;
+    }
+    return null;
+  }
+  
+  // Called immediately after updating occurs
+  // Not called for the initial render
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('6. ComponentDidUpdate: Component updated in the DOM');
+    
+    // Check if userId prop changed
+    if (prevProps.userId !== this.props.userId) {
+      this.setState({ loading: true });
+      this.fetchUserData();
+    }
+    
+    // Use the snapshot if needed
+    if (snapshot !== null) {
+      // For example, restore scroll position
+      if (this.listRef) {
+        this.listRef.scrollTop = snapshot;
+      }
+    }
+  }
+  
+  // Called immediately before a component is unmounted and destroyed
+  componentWillUnmount() {
+    console.log('7. ComponentWillUnmount: Clean up before component is removed');
+    
+    // Clean up subscriptions, timers, listeners
+    clearInterval(this.timer);
+  }
+  
+  // Example method for data fetching
+  fetchUserData() {
+    // Simulate API call
+    setTimeout(() => {
+      if (this.props.userId) {
+        this.setState({
+          user: { id: this.props.userId, name: `User ${this.props.userId}` },
+          loading: false,
+          error: null
+        });
+      } else {
+        this.setState({
+          error: 'No user ID provided',
+          loading: false
+        });
+      }
+    }, 1000);
+  }
+  
+  // Error handling lifecycle method
+  // Called when there is an error during rendering
+  componentDidCatch(error, info) {
+    console.log('Error boundary caught an error');
+    this.setState({ error: error.toString() });
+  }
+  
+  render() {
+    console.log('2/5. Render: Determine what gets rendered');
+    
+    const { loading, user, error, count } = this.state;
+    
+    if (error) {
+      return <div className="error">{error}</div>;
+    }
+    
+    if (loading) {
+      return <div className="loading">Loading user data...</div>;
+    }
+    
+    return (
+      <div className="user-profile" ref={el => this.listRef = el}>
+        <h2>User Profile</h2>
+        {user && (
+          <>
+            <p>ID: {user.id}</p>
+            <p>Name: {user.name}</p>
+            <p>Counter: {count}</p>
+          </>
+        )}
+      </div>
+    );
+  }
+}
+
+export default UserProfile;
+```
+
+### Explanation of Lifecycle Methods:
+
+1. **constructor**: 
+   - Called when the component is initialized
+   - Used for setting up initial state and binding methods
+   - Runs before mounting
+
+2. **render**:
+   - The only required method in a class component
+   - Returns the JSX to be rendered
+   - Should be pure and not modify state
+
+3. **componentDidMount**:
+   - Called immediately after a component is inserted into the DOM
+   - Perfect for data fetching, subscriptions, or DOM manipulations
+   - Only called once in the component lifecycle
+
+4. **shouldComponentUpdate**:
+   - Called before rendering when new props or state are received
+   - Return false to prevent unnecessary re-renders
+   - Used for performance optimization
+
+5. **getSnapshotBeforeUpdate**:
+   - Called right before updates are committed to the DOM
+   - Return value is passed as the third parameter to componentDidUpdate
+   - Used to capture DOM information before it potentially changes
+
+6. **componentDidUpdate**:
+   - Called immediately after updating occurs
+   - Not called for the initial render
+   - Good place to operate on the DOM or make network requests based on prop changes
+
+7. **componentWillUnmount**:
+   - Called immediately before a component is unmounted and destroyed
+   - Used for cleanup (canceling network requests, removing subscriptions)
+   - Prevents memory leaks
+
+8. **componentDidCatch**:
+   - Called when there's an error during rendering
+   - Used to create error boundaries in React applications
+   - Captures errors in child component trees
+
+This lifecycle flow allows developers to control component behavior at every stage of its existence - creation, updating, and destruction - which is powerful for complex UI interactions and state management.
+
+## Question 5: Explain Closure and Determine What is the output?
+
+```javascript
+var a = 1;
+function someFunction(number) {
+  function otherFunction(input) {
+    return a;
+  }
+  a = 5;
+  return otherFunction;
+}
+var firstResult = someFunction(19); // What is firstResult?
+var result = firstResult(12); // What is result?
+```
+
+### What is a Closure?
+
+A closure in JavaScript is when a function "remembers" and continues to access variables from its outer scope even after the outer function has finished executing. In other words, a function defined inside another function has access to the variables of the outer function even after the outer function has returned.
+
+### Analysis of the Code:
+
+1. We start with a global variable `a` set to `1`.
+
+2. `someFunction` is defined which:
+   - Takes a parameter `number` (which is `19` when called)
+   - Defines an inner function `otherFunction` that returns the value of `a`
+   - Changes the value of `a` to `5`
+   - Returns the `otherFunction` (not its result, but the function itself)
+
+3. `firstResult = someFunction(19)` executes `someFunction` and stores its return value.
+   - At this point, `a` becomes `5`
+   - `firstResult` now holds a reference to `otherFunction`
+
+4. `result = firstResult(12)` calls the function stored in `firstResult` (which is `otherFunction`).
+   - `otherFunction` returns the current value of `a`, which is `5`
+
+### Output Determination:
+
+- `firstResult` is the function `otherFunction`
+- `result` is `5`
+
+### Why This Demonstrates Closure:
+
+This is a perfect example of closure because:
+- `otherFunction` "closes over" the variable `a` from its parent scope
+- Even after `someFunction` finishes executing, `otherFunction` still maintains access to `a`
+- When `otherFunction` is later executed via `firstResult(12)`, it accesses the updated value of `a` (which is `5`)
+
+Closures are fundamental to JavaScript and are widely used in:
+- Data privacy (creating private variables)
+- Function factories
+- Event handlers
+- Callback functions
+- Module patterns
+
+They allow functions to maintain their lexical environment, which is crucial for many JavaScript design patterns.

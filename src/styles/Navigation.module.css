@@ -1,0 +1,77 @@
+.header{
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.navigation {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: white;
+
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.searchIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  background-color: #d8d8d8;
+}
+
+.searchIcon {
+  color: #6c757d;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  background-color: #d8d8d8;
+  font-size: 14px;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #4695f0;
+  border: 1px solid #4695f0;
+  border-radius: 50px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -ms-border-radius: 50px;
+  -o-border-radius: 50px;
+}
+
+.addButton:hover {
+  background-color: #3a85d8;
+  border-color: #3a85d8;
+}
+
+.addIcon {
+  margin-right: 4px;
+}
